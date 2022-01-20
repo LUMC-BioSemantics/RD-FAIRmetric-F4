@@ -1,3 +1,4 @@
+requests
 fastapi
 uvicorn[standard]
 rdflib>=6.0

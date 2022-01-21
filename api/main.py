@@ -12,8 +12,8 @@ api_router.include_router(fairmetrics_f4.router, tags=["RD-FAIRmetric-F4"])
 
 
 app = FastAPI(
-    title='FAIR Metrics',
-    description="""Perform evaluations of FAIR Metrics.
+    title='FAIR Metrics for Rare Disease',
+    description="""FAIR Metrics tests for Rare Disease data.
 
 [Source code](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4)    
 """,

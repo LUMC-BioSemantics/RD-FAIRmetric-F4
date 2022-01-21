@@ -1,4 +1,5 @@
 # RD-FAIRmetric-F4
+
 RD-FAIRmetric-F4
 
 
@@ -11,23 +12,27 @@ git clone https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4
 cd RD-FAIRmetric-F4
 ```
 
-Install dependencies after cloning the repo:
+### For development
+
+Install dependencies from the source code:
 
 ```bash
 pip install -e .
 ```
 
-Start the API locally after installing the dependencies:
+Start the API locally on http://localhost:8000
 
 ```bash
 uvicorn api.main:app --reload
 ```
 
-Or start it with docker:
+### With docker
+
+From the root of this repository, run:
 
 ```bash
 docker-compose up
 ```
 
-Access it on http://localhost:8000/docs
+Access it on http://localhost:8000
 

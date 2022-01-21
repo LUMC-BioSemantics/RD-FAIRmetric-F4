@@ -4,13 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from api import fairmetrics_f4, fairmetrics_shex
+from api import f4_search_fairdatapoint, r3_validate_patient_registry
 
 
 api_router = APIRouter()
-api_router.include_router(fairmetrics_f4.router, tags=["RD-FAIRmetric-F4"])
-api_router.include_router(fairmetrics_shex.router, tags=["RD-FAIRmetric-R1-3"])
-
+api_router.include_router(f4_search_fairdatapoint.api, tags=["RD-FAIRmetric-F4"])
+api_router.include_router(r3_validate_patient_registry.api, tags=["RD-FAIRmetric-R1-3"])
 
 app = FastAPI(
     title='FAIR Metrics for Rare Disease',

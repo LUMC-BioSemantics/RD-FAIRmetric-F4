@@ -43,29 +43,42 @@ def metric_test(input: TestInput = Body(...)) -> dict:
         start="http://purl.org/ejp-rd/metadata-model/v1/shex/patientRegistryShape",
     )
     # Check all entities with type ejp:PatientRegistry
+    # registry_subjects = g.triples((None, RDF.type, URIRef('http://purl.org/ejp-rd/vocabulary/PatientRegistry')))
+    # if len(list(registry_subjects)) < 1:
+    #   result.comment = f'FAILURE: No subject with the type <http://purl.org/ejp-rd/vocabulary/PatientRegistry> found in the RDF metadata available at {input.subject}'
+
+    # print(len(list(registry_subjects)))
+    # print('registry_subjects')
+    # print(registry_subjects)
+    # for s, p, o in registry_subjects:
     for s, p, o in g.triples((None, RDF.type, URIRef('http://purl.org/ejp-rd/vocabulary/PatientRegistry'))):
+        print('ssss')
+        print(s)
         # print('ShEx evaluate focus entity ' + str(s))
         # For specific RDF format: evaluator.evaluate(rdf_format="json-ld")
         for shex_eval in evaluator.evaluate(focus=str(s)):
             # comment = comment + f"{result.focus}: "
+            print(shex_eval)
             if shex_eval.result:
-                result.comment = result.comment + f'ShEx Passing for <{shex_eval.focus}> \n'
+                result.comment = result.comment + f'SUCCESS: ShEx validation passing for <{shex_eval.focus}>\n\n'
                 if not shex_failed:
                     result.score = 1
             else:
-                result.comment = result.comment + f'ShEx Failing for <{shex_eval.focus}> due to' + shex_eval.reason + ' \n'
+                result.comment = result.comment + f'FAILURE: ShEx validation  failing for <{shex_eval.focus}> due to' + shex_eval.reason + '\n\n'
                 shex_failed = True
                 result.score = 0
 
+    if not result.comment:
+      result.comment = f'FAILURE: No subject with the type <http://purl.org/ejp-rd/vocabulary/PatientRegistry> found in the RDF metadata available at <{input.subject}>'
+
     return JSONResponse(result.toJsonld())
 
-
-#  x-tests_metric: 'https://api.fair-enough.semanticscience.org/rest/tests/RD-R1-3'
+# x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
 test_yaml = f"""swagger: '2.0'
 info:
  version: {metric_version}
  title: "{metric_name}"
- x-tests_metric: 'https://w3id.org/rd-fairmetrics/RD-R1-3'
+ x-tests_metric: 'https://rare-disease.api.fair-enough.semanticscience.org/tests/{metric_id}'
  description: >-
   {metric_description}
  x-applies_to_principle: "R1.3"

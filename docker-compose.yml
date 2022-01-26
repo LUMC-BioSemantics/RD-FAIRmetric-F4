@@ -5,7 +5,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - 8000:80
+      - 8001:80
     volumes:
       - ./api:/app/api
       - ./metrics_tests:/app/metrics_tests

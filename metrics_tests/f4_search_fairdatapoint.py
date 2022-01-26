@@ -39,7 +39,7 @@ def metric_test(input: TestInput = Body(...)) -> dict:
 
     # Get the subject resource title from the RDF
     subject_title = None
-    result.comment = 'Could not find the resource in FAIR Data Point search'
+    result.comment = 'FAILURE: Could not find the resource in FAIR Data Point search'
     title_preds = [ RDFS.label, DC.title, DCTERMS.title, URIRef('http://schema.org/name')]
     for title_pred in title_preds: 
         for s, p, o in g.triples((result.subject, title_pred, None)):
@@ -59,19 +59,19 @@ def metric_test(input: TestInput = Body(...)) -> dict:
         for res in response.json():
             if res['uri'] == str(result.subject):
                 result.score += 1
-                result.comment = 'The subject has been found when searching in the FAIR Data Points'
+                result.comment = 'SUCCESS: The subject has been found when searching in the FAIR Data Points'
                 break
     else:
-        result.comment = f'The subject title could not be found in the resource RDF available at {input.subject}'
+        result.comment = f'FAILURE: The subject title could not be found in the resource RDF available at {input.subject}'
 
     return JSONResponse(result.toJsonld())
 
-
+# x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
 test_yaml = f"""swagger: '2.0'
 info:
  version: {metric_version}
  title: "{metric_name}"
- x-tests_metric: 'https://w3id.org/rd-fairmetrics/RD-R1'
+ x-tests_metric: 'https://rare-disease.api.fair-enough.semanticscience.org/tests/{metric_id}'
  description: >-
    {metric_description}
  x-applies_to_principle: "F4"

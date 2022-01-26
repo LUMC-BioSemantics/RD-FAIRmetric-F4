@@ -4,3 +4,5 @@ uvicorn[standard]
 rdflib>=6.0
 requests
 PyShEx
+PyLD
+extruct

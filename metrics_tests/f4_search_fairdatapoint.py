@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse, PlainTextResponse
-from api.metrics_test import MetricResult, MetricInput, yaml_params
-from rdflib import Graph, URIRef
+from api.metrics_test import FairEvaluationInput, FairEvaluation, yaml_params
+from rdflib import URIRef
 from rdflib.namespace import RDF, DC, DCTERMS, RDFS
 import requests
 
@@ -11,40 +11,36 @@ metric_name = "FAIR Metrics Domain Specific - Use of Rare Disease (RD) specific 
 metric_description = """We extract the title property of the resource from the metadata document and check if the RD specific search engine returns the metadata document of the resource that we are testing."""
 metric_version = 'Hvst-1.4.0:RD-F4-Tst-0.0.3'
 
-class TestInput(MetricInput):
+class TestInput(FairEvaluationInput):
     subject = 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972'
 
 
 api = APIRouter()
-
 @api.get(f"/{metric_id}", name=metric_name,
     description=metric_description, response_model=str, response_class=PlainTextResponse(media_type='text/x-yaml'),
 )
 def metric_yaml() -> str:
-    return PlainTextResponse(content=test_yaml, media_type='text/x-yaml')
+    return PlainTextResponse(content=metric_info, media_type='text/x-yaml')
 
 
 @api.post(f"/{metric_id}", name=metric_name,
     description=metric_description, response_model=dict,
 )            
 def metric_test(input: TestInput = Body(...)) -> dict:
-    result = MetricResult(subject=input.subject, metric_test=metric_id)
+    eval = FairEvaluation(subject=input.subject, metric_id=metric_id, metric_version=metric_version)
     fdp_search_url = "https://home.fairdatapoint.org/search"
 
-    # Download and parse RDF available at the subject URL
-    r = requests.get(input.subject)
-    g = Graph()
-    g.parse(data=r.text)
-    # print(f"Parsed {len(g)} triples")
+    g = eval.getRDF(input.subject)
+    if len(g) == 0:
+        eval.failure('No RDF found at the subject URL provided.')
+        return JSONResponse(eval.toJsonld())
 
     # Get the subject resource title from the RDF
     subject_title = None
-    result.comment = 'FAILURE: Could not find the resource in FAIR Data Point search'
     title_preds = [ RDFS.label, DC.title, DCTERMS.title, URIRef('http://schema.org/name')]
     for title_pred in title_preds: 
-        for s, p, o in g.triples((result.subject, title_pred, None)):
+        for s, p, o in g.triples((eval.subject, title_pred, None)):
             subject_title = str(o)
-            # print(f"Searching for this title in the FDP search: {o}")
         if subject_title:
             break
     
@@ -55,19 +51,19 @@ def metric_test(input: TestInput = Body(...)) -> dict:
             'Content-Type': "application/json"
         }
         response = requests.post(fdp_search_url, json=payload, headers=headers)
-
         for res in response.json():
-            if res['uri'] == str(result.subject):
-                result.score += 1
-                result.comment = 'SUCCESS: The subject has been found when searching in the FAIR Data Points'
-                break
+            if res['uri'] == str(eval.subject):
+                eval.success('The subject has been found when searching for its title in the FAIR Data Points')
+                return JSONResponse(eval.toJsonld())
+        eval.failure(f'The subject <{input.subject}> has not been found when searching in the FAIR Data Points for: {subject_title}')
     else:
-        result.comment = f'FAILURE: The subject title could not be found in the resource RDF available at {input.subject}'
+        eval.failure(f'The subject title could not be found in the resource RDF available at {input.subject}')
 
-    return JSONResponse(result.toJsonld())
+    return JSONResponse(eval.toJsonld())
+
 
 # x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
-test_yaml = f"""swagger: '2.0'
+metric_info = f"""swagger: '2.0'
 info:
  version: {metric_version}
  title: "{metric_name}"

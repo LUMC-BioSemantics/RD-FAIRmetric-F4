@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse, PlainTextResponse
-from api.metric_test import MetricResult, MetricInput
+from api.metrics_test import MetricResult, MetricInput, yaml_params
 from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, DC, DCTERMS, RDFS
 from pyshex import ShExEvaluator
@@ -9,6 +9,7 @@ import requests
 metric_id = 'RD-R1-3'
 metric_name = "FAIR Metrics Domain Specific - RD-R1.3 Metadata conforms to EJP RD model"
 metric_description = """A domain-specific test for metadata of resources in the Rare Disease domain. It tests if the metadata is structured conforming to the EJP RD DCAT-based metadata model. No failures in the ShEx validation of the metadata content of the resource against the EJP RD ShEx shapes, will be sufficient to pass the test."""
+metric_version = 'Hvst-1.4.0:RD-R1-3-Tst-0.0.3'
 
 class TestInput(MetricInput):
     subject = 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl'
@@ -20,7 +21,7 @@ api = APIRouter()
     description=metric_description, response_model=str, response_class=PlainTextResponse(media_type='text/x-yaml'),
 )
 def metric_yaml() -> str:
-    return PlainTextResponse(content=yaml, media_type='text/x-yaml')
+    return PlainTextResponse(content=test_yaml, media_type='text/x-yaml')
 
 
 @api.post(f"/{metric_id}", name=metric_name,
@@ -60,9 +61,9 @@ def metric_test(input: TestInput = Body(...)) -> dict:
 
 
 #  x-tests_metric: 'https://api.fair-enough.semanticscience.org/rest/tests/RD-R1-3'
-yaml = f"""swagger: '2.0'
+test_yaml = f"""swagger: '2.0'
 info:
- version: 'Hvst-1.4.0:RD-R1-3-Tst-0.0.3'
+ version: {metric_version}
  title: "{metric_name}"
  x-tests_metric: 'https://w3id.org/rd-fairmetrics/RD-R1-3'
  description: >-
@@ -81,30 +82,7 @@ schemes:
   - https
 paths:
  {metric_id}:
-  post:
-   parameters:
-    - name: content
-      in: body
-      required: true
-      schema:
-        $ref: '#/definitions/schemas'
-   consumes:
-     - application/json
-   produces:  
-     - application/json
-   responses:
-     "200":
-       description: >-
-        The response is a binary (1/0), success or failure
-definitions:
-  schemas:
-    required:
-     - subject
-    properties:
-        subject:
-          type: string
-          description: >-
-            the GUID being tested"""
+{yaml_params}"""
 
 
 patientregistry_shex = """PREFIX : <http://purl.org/ejp-rd/metadata-model/v1/shex/>

@@ -1,6 +1,15 @@
-# RD-FAIRmetric-F4
+# 🧫 FAIR metrics for Rare Disease research
 
-RD-FAIRmetric-F4
+FAIR metrics tests service for Rare Disease research.
+
+Deployed publicy at https://rare-disease.api.fair-enough.semanticscience.org
+
+🗃️ Can be used with the FAIR evaluation services:
+
+* https://fair-enough.semanticscience.org
+* https://fairsharing.github.io/FAIR-Evaluator-FrontEnd
+
+Metrics tests API built with Python and [FastAPI](https://fastapi.tiangolo.com/).
 
 
 ## Deploy the API
@@ -12,7 +21,19 @@ git clone https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4
 cd RD-FAIRmetric-F4
 ```
 
-### For development
+### 🐳 Development with docker (recommended)
+
+From the root of this repository, run the command below, and access the OpenAPI Swagger UI on http://localhost:8000
+
+```bash
+docker-compose up
+```
+
+The API will automatically reload on changes to the code.
+
+### 🐍 Development without docker
+
+Note: it has been tested only with Python 3.8
 
 Install dependencies from the source code:
 
@@ -26,13 +47,14 @@ Start the API locally on http://localhost:8000
 uvicorn api.main:app --reload
 ```
 
-### With docker
+### 🚀 In production with docker
 
-From the root of this repository, run:
+We use the `docker-compose.prod.yml` file to define the production deployment configuration.
+
+To start the stack with production config:
 
 ```bash
-docker-compose up
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-Access it on http://localhost:8000
-
+> We use a reverse [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) for docker to route the services.

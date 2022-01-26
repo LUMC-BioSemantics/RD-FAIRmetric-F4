@@ -2,18 +2,20 @@ from fastapi import FastAPI, APIRouter, Request, Response
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseSettings
 
-from api import f4_search_fairdatapoint, r3_validate_patient_registry
+from metrics_tests import router
 
 
 api_router = APIRouter()
-api_router.include_router(f4_search_fairdatapoint.api, tags=["RD-FAIRmetric-F4"])
-api_router.include_router(r3_validate_patient_registry.api, tags=["RD-FAIRmetric-R1-3"])
+
+# Import tests from the metrics_tests folder:
+api_router.include_router(router, prefix='/tests', tags=["FAIR Metrics Tests"])
+
 
 app = FastAPI(
-    title='FAIR Metrics for Rare Disease',
-    description="""FAIR Metrics tests for Rare Disease data.
+    title='FAIR Metrics tests API for Rare Disease',
+    description="""FAIR Metrics tests API for resources related to research on Rare Disease.
 
 [Source code](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4)    
 """,
@@ -43,3 +45,4 @@ app.add_middleware(
 def redirect_root_to_docs():
     """Redirect the route / to /docs"""
     return RedirectResponse(url='/docs')
+

@@ -8,9 +8,5 @@ services:
       - 8000:80
     volumes:
       - ./api:/app/api
-
-    ## We do production deployment with https://github.com/nginx-proxy/nginx-proxy
-    # environment:
-    #   - VIRTUAL_HOST=fair-eval.semanticscience.org
-    #   - LETSENCRYPT_HOST=fair-eval.semanticscience.org
-    #   - VIRTUAL_PORT=80
+      - ./metrics_tests:/app/metrics_tests
+    command: /start-reload.sh

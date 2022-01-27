@@ -67,6 +67,7 @@ def metric_test(input: TestInput = Body(...)) -> dict:
 
 
 # x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
+# host: w3id.org/rd-fairness-tests
 metric_info = f"""swagger: '2.0'
 info:
  version: {metric_version}
@@ -82,8 +83,8 @@ info:
   x-role: "responsible developer"
   email: r.kaliyaperumal@lumc.nl
   x-id: '0000-0002-1215-167X'
-host: w3id.org/rd-fairness-tests
-basePath: /rest/tests/
+host: rare-disease.api.fair-enough.semanticscience.org
+basePath: /tests/
 schemes:
   - https
 paths:

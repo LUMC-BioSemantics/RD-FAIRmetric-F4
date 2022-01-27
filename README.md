@@ -1,5 +1,7 @@
 # 🧫 FAIR metrics for Rare Disease research
 
+[![Test Metrics](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4/actions/workflows/test.yml/badge.svg)](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4/actions/workflows/test.yml)
+
 FAIR metrics tests service for Rare Disease research.
 
 Deployed publicy at https://rare-disease.api.fair-enough.semanticscience.org

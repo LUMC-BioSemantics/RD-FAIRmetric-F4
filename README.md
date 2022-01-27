@@ -63,9 +63,11 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ## ✅ Test the Metrics API
 
-Add tests in the `./tests/test_metrics.py` file. You just need to add new entries to the JSON file to test different subjects results against the metrics tests:
+The tests are run automatically by a GitHub Action workflow at every push to the `main` branch.
 
-```json
+Add more tests in the `./tests/test_metrics.py` file. You will just need to add new entries to the JSON file to test different subjects results against your metrics tests, e.g.:
+
+```python
 {
     'metric_id': 'RD-F4',
     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
@@ -73,9 +75,10 @@ Add tests in the `./tests/test_metrics.py` file. You just need to add new entrie
 },
 ```
 
-Run the tests in docker-compose:
+Run the tests locally with docker-compose:
 
 ```bash
 docker-compose -f docker-compose.test.yml up --force-recreate
 ```
 
+You can enable more detailed logs by changing the `command:` in the `docker-compose.test.yml` file to use `pytest -s`

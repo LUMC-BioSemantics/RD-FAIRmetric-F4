@@ -58,3 +58,22 @@ docker-compose -f docker-compose.prod.yml up -d
 ```
 
 > We use a reverse [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) for docker to route the services.
+
+## ✅ Test the Metrics API
+
+Add tests in the `./tests/test_metrics.py` file. You just need to add new entries to the JSON file to test different subjects results against the metrics tests:
+
+```json
+{
+    'metric_id': 'RD-F4',
+    'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
+    'score': 1,
+},
+```
+
+Run the tests in docker-compose:
+
+```bash
+docker-compose -f docker-compose.test.yml up --force-recreate
+```
+

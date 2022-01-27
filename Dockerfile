@@ -6,6 +6,10 @@ COPY ./requirements.txt /app/
 
 RUN pip install -r requirements.txt
 
+# Allow installing dev dependencies to run tests
+ARG INSTALL_DEV=false
+RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install pytest ; fi"
+
 COPY . /app
 
 RUN python setup.py install

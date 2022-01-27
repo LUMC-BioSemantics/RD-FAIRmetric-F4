@@ -27,7 +27,11 @@ def metric_yaml() -> str:
     description=metric_description, response_model=dict,
 )            
 def metric_test(input: TestInput = Body(...)) -> dict:
-    eval = FairEvaluation(subject=input.subject, metric_id=metric_id, metric_version=metric_version)
+    eval = FairEvaluation(
+        subject=input.subject, 
+        metric_id=metric_id, 
+        metric_version=metric_version
+    )
     fdp_search_url = "https://home.fairdatapoint.org/search"
 
     g = eval.getRDF(input.subject)
@@ -35,7 +39,7 @@ def metric_test(input: TestInput = Body(...)) -> dict:
         eval.failure('No RDF found at the subject URL provided.')
         return JSONResponse(eval.toJsonld())
 
-    # Get the subject resource title from the RDF
+    # Get the subject resource title from the RDF metadata
     subject_title = None
     title_preds = [ RDFS.label, DC.title, DCTERMS.title, URIRef('http://schema.org/name')]
     for title_pred in title_preds: 

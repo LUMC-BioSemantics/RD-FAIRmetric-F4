@@ -23,7 +23,7 @@ eval_list = [
     {
         'metric_id': 'RD-R1-3',
         'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-        'score': 0,
+        'score': 1,
     },
 ]
 

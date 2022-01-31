@@ -25,7 +25,7 @@ def metric_yaml() -> str:
 
 @api.post(f"/{metric_id}", name=metric_name,
     description=metric_description, response_model=dict,
-)            
+)
 def metric_test(input: TestInput = Body(...)) -> dict:
     eval = FairEvaluation(subject=input.subject, metric_id=metric_id, metric_version=metric_version)
     shex_failed = False
@@ -95,29 +95,12 @@ PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX sio:  <http://semanticscience.org/resource/>
 PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
-:patientRegistryShape IRI {
-  a [ejp:PatientRegistry];
-  dct:title xsd:string;
-  dct:description xsd:string*;
-  ejp:populationCoverage @:populationCoverageShape*;
-  dcat:theme IRI+;
-  dct:publisher @:organisationShape;
-  foaf:page IRI*
-}
-:locationShape IRI {
-  a [dct:Location];
-  dct:title xsd:string;
-  dct:description xsd:string*;
-}
-:organisationShape IRI {
-  a [foaf:Organisation];
-  dct:title xsd:string;
-  dct:description xsd:string*;
-  dct:spatial @:locationShape*;
-  foaf:page IRI*
-}
-:populationCoverageShape IRI {
-  a [sio:SIO_001166];
-  rdfs:label ["National" "International" "Regional"]
-}"""
 
+:ejprdResourceShape IRI {
+  a [ejp:PatientRegistry ejp:Biobank ejp:Guideline dcat:Dataset];
+  a [dcat:Resource]*;
+  dct:title xsd:string;
+  dct:description xsd:string*;
+  dcat:theme IRI+;
+  foaf:page IRI*
+}"""

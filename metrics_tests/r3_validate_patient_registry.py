@@ -67,7 +67,7 @@ metric_info = f"""swagger: '2.0'
 info:
  version: {metric_version}
  title: "{metric_name}"
- x-tests_metric: 'https://rare-disease.api.fair-enough.semanticscience.org/tests/{metric_id}'
+ x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
  description: >-
   {metric_description}
  x-applies_to_principle: "R1.3"
@@ -78,7 +78,7 @@ info:
   x-role: "responsible developer"
   email: n.queralt_rosinach@lumc.nl
   x-id: '0000-0003-0169-8159'
-host: rare-disease.api.fair-enough.semanticscience.org
+host: w3id.org/rd-fairness-tests
 basePath: /tests/
 schemes:
   - https

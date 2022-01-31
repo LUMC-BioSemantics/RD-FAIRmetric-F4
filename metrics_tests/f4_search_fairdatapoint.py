@@ -66,13 +66,11 @@ def metric_test(input: TestInput = Body(...)) -> dict:
     return JSONResponse(eval.toJsonld())
 
 
-# x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
-# host: w3id.org/rd-fairness-tests
 metric_info = f"""swagger: '2.0'
 info:
  version: {metric_version}
  title: "{metric_name}"
- x-tests_metric: 'https://rare-disease.api.fair-enough.semanticscience.org/tests/{metric_id}'
+ x-tests_metric: 'https://w3id.org/rd-fairmetrics/{metric_id}'
  description: >-
    {metric_description}
  x-applies_to_principle: "F4"
@@ -83,7 +81,7 @@ info:
   x-role: "responsible developer"
   email: r.kaliyaperumal@lumc.nl
   x-id: '0000-0002-1215-167X'
-host: rare-disease.api.fair-enough.semanticscience.org
+host: w3id.org/rd-fairness-tests
 basePath: /tests/
 schemes:
   - https

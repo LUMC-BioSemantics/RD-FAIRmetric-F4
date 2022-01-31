@@ -36,28 +36,37 @@ def metric_test(input: TestInput = Body(...)) -> dict:
         return JSONResponse(eval.toJsonld())
 
     evaluator = ShExEvaluator(g.serialize(format='turtle'), patientregistry_shex,
-        start="http://purl.org/ejp-rd/metadata-model/v1/shex/patientRegistryShape",
+        start="http://purl.org/ejp-rd/metadata-model/v1/shex/ejprdResourceShape",
+        # start="http://purl.org/ejp-rd/metadata-model/v1/shex/patientRegistryShape",
     )
-    # Validate all entities with type ejp:PatientRegistry
+    
+    # Validate all entities with the following types:
+    validate_types = [ 
+        URIRef('http://purl.org/ejp-rd/vocabulary/PatientRegistry'), 
+        URIRef('http://purl.org/ejp-rd/vocabulary/Biobank'), 
+        URIRef('http://purl.org/ejp-rd/vocabulary/Guideline'), 
+        URIRef('http://www.w3.org/ns/dcat#Dataset')
+    ]
     patient_registry_found = False
-    for s, p, o in g.triples((None, RDF.type, URIRef('http://purl.org/ejp-rd/vocabulary/PatientRegistry'))):
-        patient_registry_found = True
-        # print('ShEx evaluate focus entity ' + str(s))
-        # For specific RDF format: evaluator.evaluate(rdf_format="json-ld")
-        for shex_eval in evaluator.evaluate(focus=str(s)):
-            # comment = comment + f"{result.focus}: "
-            print(shex_eval)
-            if shex_eval.result:
-                if not shex_failed:
-                    eval.success(f'ShEx validation passing for <{shex_eval.focus}>')
+    for validate_type in validate_types: 
+        
+        for s, p, o in g.triples((None, RDF.type, validate_type)):
+            patient_registry_found = True
+            # print('ShEx evaluate focus entity ' + str(s))
+            # For specific RDF format: evaluator.evaluate(rdf_format="json-ld")
+            for shex_eval in evaluator.evaluate(focus=str(s)):
+                # comment = comment + f"{result.focus}: "
+                if shex_eval.result:
+                    if not shex_failed:
+                        eval.success(f'ShEx validation passing for type <{validate_type}> with focus <{shex_eval.focus}>')
+                    else:
+                        eval.info(f'ShEx validation passing for type <{validate_type}> with focus <{shex_eval.focus}>')
                 else:
-                    eval.info(f'ShEx validation passing for <{shex_eval.focus}>')
-            else:
-                eval.failure(f'ShEx validation failing for <{shex_eval.focus}> due to {shex_eval.reason}')
-                shex_failed = True
+                    eval.failure(f'ShEx validation failing for type <{validate_type}> with focus <{shex_eval.focus}> due to {shex_eval.reason}')
+                    shex_failed = True
 
     if patient_registry_found == False:
-      eval.failure(f'No subject with the type <http://purl.org/ejp-rd/vocabulary/PatientRegistry> found in the RDF metadata available at <{input.subject}>')
+        eval.failure(f'No subject with the type <http://purl.org/ejp-rd/vocabulary/PatientRegistry> found in the RDF metadata available at <{input.subject}>')
 
     return JSONResponse(eval.toJsonld())
 
@@ -97,10 +106,10 @@ PREFIX sio:  <http://semanticscience.org/resource/>
 PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
 
 :ejprdResourceShape IRI {
-  a [ejp:PatientRegistry ejp:Biobank ejp:Guideline dcat:Dataset];
-  a [dcat:Resource]*;
-  dct:title xsd:string;
-  dct:description xsd:string*;
-  dcat:theme IRI+;
-  foaf:page IRI*
+    a [ejp:PatientRegistry ejp:Biobank ejp:Guideline dcat:Dataset];
+    a [dcat:Resource]*;
+    dct:title xsd:string;
+    dct:description xsd:string*;
+    dcat:theme IRI+;
+    foaf:page IRI*
 }"""

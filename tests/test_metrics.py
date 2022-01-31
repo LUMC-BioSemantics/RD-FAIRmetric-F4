@@ -25,6 +25,11 @@ eval_list = [
         'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
         'score': 1,
     },
+    {
+        'metric_id': 'RD-R1-3',
+        'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/catalog.ttl',
+        'score': 0,
+    },
 ]
 
 

@@ -2,19 +2,21 @@
 
 [![Test Metrics](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4/actions/workflows/test.yml/badge.svg)](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4/actions/workflows/test.yml)
 
-FAIR metrics tests service for Rare Disease research.
+An API to deploy FAIR metrics tests for the research on Rare Disease community.
 
-Deployed publicy at https://rare-disease.api.fair-enough.semanticscience.org
+FAIR metrics tests are API operations which test if a subject URL is complying with certain requirements defined by a community, they usually check if the resource available at the subject URL complies with the FAIR principles (Findable, Accessible, Interoperable, Reusable).
 
-🗃️ Can be used with the FAIR evaluation services:
+This API is deployed publicly at **https://rare-disease.api.fair-enough.semanticscience.org**
+
+🗃️ It can be used with the following FAIR evaluation services::
 
 * https://fair-enough.semanticscience.org
 * https://fairsharing.github.io/FAIR-Evaluator-FrontEnd
 
-Metrics tests API built with Python and [FastAPI](https://fastapi.tiangolo.com/).
+This FAIR Metrics tests API has been built with the [**FAIR test**](https://maastrichtu-ids.github.io/fair-test/) python library.
 
 
-## Deploy the API
+## 🧑‍💻 Deploy the API
 
 Clone the repository:
 
@@ -46,7 +48,7 @@ pip install -e .
 Start the API locally on http://localhost:8000
 
 ```bash
-uvicorn api.main:app --reload
+uvicorn main:app --reload
 ```
 
 ### 🚀 In production with docker
@@ -65,15 +67,7 @@ docker-compose -f docker-compose.prod.yml up -d
 
 The tests are run automatically by a GitHub Action workflow at every push to the `main` branch.
 
-Add more tests in the `./tests/test_metrics.py` file. You will just need to add new entries to the JSON file to test different subjects results against your metrics tests, e.g.:
-
-```python
-{
-    'metric_id': 'RD-F4',
-    'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-    'score': 1,
-},
-```
+Add tests using the `test_test` parameter in each metric test in the `metrics` folder.
 
 Run the tests locally with docker-compose:
 

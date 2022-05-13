@@ -7,6 +7,6 @@ services:
     ports:
       - 8001:80
     volumes:
-      - ./api:/app/api
-      - ./metrics_tests:/app/metrics_tests
+      - ./metrics:/app/metrics
     command: /start-reload.sh
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000

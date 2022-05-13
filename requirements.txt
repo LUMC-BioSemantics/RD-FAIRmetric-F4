@@ -1,8 +1,7 @@
 requests
-fastapi
-uvicorn[standard]
 rdflib>=6.0
 requests
 PyShEx
 PyLD
 extruct
+fair-test@git+https://github.com/MaastrichtU-IDS/fair-test@main

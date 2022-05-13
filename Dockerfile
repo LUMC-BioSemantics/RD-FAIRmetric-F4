@@ -15,6 +15,16 @@ COPY . /app
 
 # RUN python setup.py install
 
+
+# Create non root user app
+RUN addgroup --system app && adduser --system --group app
+
+# Make sure all files belongs to the app user
+RUN chown -R app:app /app && \
+    chown -R app:app $HOME
+
+USER app
+
 ENV APP_MODULE=main:app
 
 # Creates problem when installing pip packages from GitHub, and everything works without them, for the moment...

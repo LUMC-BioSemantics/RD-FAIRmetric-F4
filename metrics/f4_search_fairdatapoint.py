@@ -43,6 +43,7 @@ class MetricTest(FairTest):
         for title_pred in title_preds: 
             for s, p, o in g.triples((URIRef(eval.subject), title_pred, None)):
                 subject_title = str(o)
+                eval.data['title'] = [subject_title]
             if subject_title:
                 break
         
@@ -55,7 +56,7 @@ class MetricTest(FairTest):
             response = requests.post(fdp_search_url, json=payload, headers=headers)
             for res in response.json():
                 if res['uri'] == str(eval.subject):
-                    eval.success('The subject has been found when searching for its title in the FAIR Data Points')
+                    eval.success(f'The subject has been found when searching for its title in the FAIR Data Points: {subject_title}')
                     return eval.response()
             eval.failure(f'The subject <{eval.subject}> has not been found when searching in the FAIR Data Points for: {subject_title}')
         else:
